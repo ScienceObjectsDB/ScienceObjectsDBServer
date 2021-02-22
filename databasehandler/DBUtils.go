@@ -102,6 +102,39 @@ func (handler *DBUtilsHandler) GetTokenCollection() *mongo.Collection {
 	return handler.MongoClient.Database(handler.AuthDatabaseName).Collection(handler.APITokenCollectionName)
 }
 
+//Insert Inserts a given value into a given collection and decodes the inserted value into the given decode value
+func (handler *DBUtilsHandler) Insert(collection *mongo.Collection, insertValue interface{}, decodeValue interface{}) error {
+	insertedResult, err := collection.InsertOne(handler.MongoDefaultContext, &insertValue)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	var oid primitive.ObjectID
+	var ok bool
+
+	if oid, ok = insertedResult.InsertedID.(primitive.ObjectID); !ok {
+		return errors.New("Error decoding result id")
+	}
+
+	result := collection.FindOne(handler.MongoDefaultContext, bson.M{
+		"_id": oid,
+	})
+
+	if result.Err() != nil {
+		log.Println(result.Err().Error())
+		return err
+	}
+
+	err = result.Decode(&decodeValue)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
 // CreateNewMongoConnection Creates a new mongodb connection
 func CreateNewMongoConnection(ctx context.Context) (*mongo.Client, error) {
 	mongoDBURL := viper.GetString("Config.Database.Mongo.URL")
