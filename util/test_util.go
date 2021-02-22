@@ -17,5 +17,9 @@ func InitTestEnv() error {
 	viper.Set("Config.Database.Mongo.AuthSource", "admin")
 	viper.Set("Config.Database.Mongo.Username", "root")
 
+	if os.Getenv("MONGO_INITDB_URL") != "" {
+		viper.Set("Config.Database.Mongo.URL", "localhost")
+	}
+
 	return nil
 }
