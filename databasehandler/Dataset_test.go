@@ -72,6 +72,4 @@ func Test_Dataset(t *testing.T) {
 		t.Errorf("Inserted projectID does not match")
 	}
 
-	panic("foo")
-
 }
