@@ -1,0 +1,17 @@
+Config:
+  API:
+    Token: test123
+    EndpointHost: 
+    Endpointport: 9000
+  Database:
+    Mongo:
+      URL: biodatadbmongo-dev-mongodb-sharded.datahandler-dev.svc.cluster.local
+      Username: root
+      AuthSource: admin
+      DatasetDatabaseName: TestMainDatabase
+      AuthorizationDatabaseName: AuthorizationDatabase
+  S3:
+    Bucketname: BioDataDBTestBucket
+  OAuth2Auth:
+    UserInfoEndpoint: "https://keycloak.infra.ingress.rancher.computational.bio/auth/realms/BioDataDBDev/protocol/openid-connect/userinfo"
+  
