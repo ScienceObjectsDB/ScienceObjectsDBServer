@@ -4,12 +4,17 @@ services:
   sut:
     environment:
       MONGO_INITDB_URL: mongo
+      MINIO_ENDPOINT_URL: minio
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
     build: 
       context: .
       dockerfile: test/Dockerfile
     command: go test ./...
     depends_on:
       - mongo
+      - minio
+      - minioConf
   mongo:
     image: mongo
     restart: always
@@ -18,3 +23,19 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: test123
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+  minioConf:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc rm -r --force myminio/testbucket;
+      /usr/bin/mc mb myminio/testbucket;
+      /usr/bin/mc policy download myminio/testbucket;
+      exit 0;
+      "

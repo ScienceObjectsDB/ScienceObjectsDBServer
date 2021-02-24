@@ -12,6 +12,8 @@ Config:
       AuthorizationDatabaseName: AuthorizationDatabase
   S3:
     Bucketname: BioDataDBTestBucket
+    Endpoint: s3.computationall.bio.uni-gessen.de
+    Region: RegionOne
   OAuth2Auth:
     UserInfoEndpoint: "https://keycloak.infra.ingress.rancher.computational.bio/auth/realms/BioDataDBDev/protocol/openid-connect/userinfo"
   
