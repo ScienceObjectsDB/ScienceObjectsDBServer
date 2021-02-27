@@ -17,6 +17,14 @@ type DatasetVersionActionHandler struct {
 	DBUtilsHandler
 }
 
+func NewDatasetVersionHandler(dbHandler *DBUtilsHandler) (*DatasetVersionActionHandler, error) {
+	handler := DatasetVersionActionHandler{
+		DBUtilsHandler: *dbHandler,
+	}
+
+	return &handler, nil
+}
+
 //ReleaseDatasetVersion Releases a new dataset version
 func (handler *DatasetVersionActionHandler) ReleaseDatasetVersion(request *services.ReleaseDatasetVersionRequest) (*models.DatasetVersionEntry, error) {
 	csr, err := handler.GetDatasetVersionCollection().Find(handler.MongoDefaultContext, bson.M{

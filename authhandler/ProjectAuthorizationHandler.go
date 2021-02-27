@@ -38,6 +38,37 @@ type ProjectAuthHandler struct {
 	ProjectHandler       *databasehandler.ProjectActionHandler
 }
 
+func InitProjectHandler(projectHandler *databasehandler.ProjectActionHandler, tokenHandler *databasehandler.TokenActionHandler) (*ProjectAuthHandler, error) {
+	oauth2handler, err := InitOauth2()
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return &ProjectAuthHandler{
+		OAuth2Handler:        oauth2handler,
+		DatabaseTokenHandler: tokenHandler,
+		ProjectHandler:       projectHandler,
+	}, nil
+
+}
+
+func (handler *ProjectAuthHandler) UserID(requestContext context.Context) (string, error) {
+	requestToken, err := getToken(requestContext)
+	if err != nil {
+		log.Println(err.Error())
+		return "false", err
+	}
+
+	userID, err := handler.OAuth2Handler.getUserIDFromOAuth2(requestToken.Token)
+	if err != nil {
+		log.Println(err.Error())
+		return "false", err
+	}
+
+	return userID, nil
+}
+
 //Authorize Authorizes the request for a resource based on project scoped rights
 func (handler *ProjectAuthHandler) Authorize(
 	requestContext context.Context,

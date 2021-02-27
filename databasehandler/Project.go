@@ -16,7 +16,7 @@ import (
 
 //ProjectActionHandler Handler for project related database functions
 type ProjectActionHandler struct {
-	DBUtilsHandler
+	*DBUtilsHandler
 }
 
 // CreateProject Creates a new project

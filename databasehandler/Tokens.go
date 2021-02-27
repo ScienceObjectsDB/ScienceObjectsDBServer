@@ -17,7 +17,7 @@ const tokenLen = 64
 
 //TokenActionHandler Handler for token related database actions
 type TokenActionHandler struct {
-	DBUtilsHandler
+	*DBUtilsHandler
 }
 
 // CreateToken Creates a token for a project

@@ -16,8 +16,8 @@ type OAuth2Handler struct {
 	UserInfoEndpointURL string
 }
 
-// Init Initializes the auth handler object
-func Init() (*OAuth2Handler, error) {
+// InitOauth2 Initializes the auth handler object
+func InitOauth2() (*OAuth2Handler, error) {
 	endpointURL := viper.GetString("Auth.UserInfoEndpointURL")
 	if endpointURL == "" {
 		err := errors.New("Endpoint URL has to be provided in config as 'Auth.UserInfoEndpointURL'")

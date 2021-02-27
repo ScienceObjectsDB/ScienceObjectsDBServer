@@ -22,11 +22,16 @@ type S3Handler struct {
 //NewS3Handler Creates a new  handler to handle S3 related operations
 func NewS3Handler() (*S3Handler, error) {
 
-	endpoint := viper.GetString("Config.S3.Endpoint")
+	endpoint := "http://localhost:9000"
 
-	if endpoint == "" {
-		endpoint = "http://localhost:9000"
+	if viper.GetString("Config.S3.Endpoint") != "" {
+		endpoint = viper.GetString("Config.S3.Endpoint")
 	}
+
+	if os.Getenv("MINIO_ENDPOINT_URL") != "" {
+		endpoint = os.Getenv("MINIO_ENDPOINT_URL")
+	}
+
 	hostnameImmutable := false
 	if strings.HasSuffix(os.Args[0], ".test") {
 		hostnameImmutable = true

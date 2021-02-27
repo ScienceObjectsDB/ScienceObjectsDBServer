@@ -1,6 +1,7 @@
 package databasehandler
 
 import (
+	"context"
 	"errors"
 	"log"
 
@@ -122,4 +123,25 @@ func (handler *DatasetActionHandler) GetDatasetProjectID(datasetid string) (stri
 	}
 
 	return entry.GetProjectID(), nil
+}
+
+func (handler *DatasetActionHandler) GetDatasetVersions(datasetid string) ([]*models.DatasetVersionEntry, error) {
+	var entries []*models.DatasetVersionEntry
+
+	queryResult, err := handler.GetDatasetVersionCollection().Find(handler.MongoDefaultContext, bson.M{
+		"DatasetID": datasetid,
+	})
+
+	if err != nil {
+		log.Println(err.Error())
+		return entries, err
+	}
+
+	err = queryResult.All(context.Background(), &entries)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return entries, nil
 }
