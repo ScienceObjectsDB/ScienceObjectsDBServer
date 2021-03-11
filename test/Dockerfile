@@ -1,7 +1,7 @@
 FROM golang:latest as builder
 
-WORKDIR sciienceobjectsdb
+WORKDIR scienceobjectsdb
 
 COPY . .
 
-CMD CGO_ENABLED=0 GOOS=linux go test ./...
+CMD go test ./...

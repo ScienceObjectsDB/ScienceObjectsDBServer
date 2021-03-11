@@ -9,8 +9,14 @@ import (
 	"github.com/ScienceObjectsDB/go-api/services"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
+
+type SingleObject struct {
+	ID      string
+	Objects []*models.DatasetObjectEntry
+}
 
 //ObjectGroupHandler Handles dataset object group actions
 type ObjectGroupHandler struct {
@@ -30,6 +36,7 @@ func (handler *ObjectGroupHandler) CreateDatasetObjectGroupObject(request *servi
 	uuidString := uuid.New().String()
 
 	objectGroup := models.DatasetObjectGroup{
+		ID:                 uuidString,
 		Name:               request.Name,
 		InitializedObjects: int64(len(request.Objects)),
 		Labels:             request.Labels,
@@ -39,7 +46,7 @@ func (handler *ObjectGroupHandler) CreateDatasetObjectGroupObject(request *servi
 		Status:             models.Status_Available,
 	}
 
-	objects := make(map[string]*models.DatasetObjectEntry)
+	var objects []*models.DatasetObjectEntry
 
 	for i, requestedObject := range request.GetObjects() {
 		objectuuidString := fmt.Sprintf("%v-%v", uuidString, i)
@@ -63,7 +70,8 @@ func (handler *ObjectGroupHandler) CreateDatasetObjectGroupObject(request *servi
 			},
 		}
 
-		objects[objectuuidString] = &object
+		objects = append(objects, &object)
+
 	}
 
 	objectGroup.Objects = objects
@@ -99,6 +107,8 @@ func (handler *ObjectGroupHandler) GetObjectGroup(objectGroupID string) (*models
 		"ID": objectGroupID,
 	})
 
+	log.Println(objectGroupID)
+
 	datasetObjectGroup := models.DatasetObjectGroup{}
 
 	if result.Err() != nil {
@@ -116,22 +126,28 @@ func (handler *ObjectGroupHandler) GetObjectGroup(objectGroupID string) (*models
 }
 
 func (handler *ObjectGroupHandler) GetObject(objectID string) (string, *models.DatasetObjectEntry, error) {
-	result := handler.DBUtilsHandler.GetDatasetObjectGroupCollection().FindOne(handler.MongoDefaultContext, bson.M{
-		"ID.Objects": objectID,
-	})
+	option := options.FindOneOptions{
+		Projection: bson.M{"Objects.$": 1, "ID": 1},
+	}
 
-	datasetObjectGroup := models.DatasetObjectGroup{}
+	result := handler.DBUtilsHandler.GetDatasetObjectGroupCollection().FindOne(
+		handler.MongoDefaultContext,
+		bson.M{"Objects.ID": objectID},
+		&option,
+	)
+
+	datasetObject := SingleObject{}
 
 	if result.Err() != nil {
 		log.Println(result.Err().Error())
 		return "", nil, result.Err()
 	}
 
-	err := result.Decode(&datasetObjectGroup)
+	err := result.Decode(&datasetObject)
 	if err != nil {
 		log.Println(err.Error())
 		return "", nil, err
 	}
 
-	return datasetObjectGroup.GetID(), datasetObjectGroup.GetObjects()[objectID], nil
+	return datasetObject.ID, datasetObject.Objects[0], nil
 }

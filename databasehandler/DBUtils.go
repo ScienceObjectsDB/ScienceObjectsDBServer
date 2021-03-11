@@ -126,7 +126,7 @@ func (handler *DBUtilsHandler) Insert(collection *mongo.Collection, insertValue 
 		return err
 	}
 
-	err = result.Decode(&decodeValue)
+	err = result.Decode(decodeValue)
 	if err != nil {
 		log.Println(err.Error())
 		return err

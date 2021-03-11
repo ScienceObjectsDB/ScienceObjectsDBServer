@@ -14,7 +14,6 @@ import (
 
 func TestS3Handler_CreatePresignedLinks(t *testing.T) {
 	key := path.Join("foo", "baa")
-
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	os.Setenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
@@ -47,8 +46,6 @@ func TestS3Handler_CreatePresignedLinks(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
-	log.Println(req)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

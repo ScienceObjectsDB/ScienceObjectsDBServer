@@ -2,6 +2,7 @@ package databasehandler
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/ScienceObjectsDB/go-api/models"
@@ -10,6 +11,8 @@ import (
 )
 
 func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	datasetHandler, err := NewObjectGroupHandler(dbHandler)
 	if err != nil {
 		t.Error(err)
@@ -61,8 +64,8 @@ func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
 		t.Error(err)
 	}
 
-	for key, _ := range objectGroup.GetObjects() {
-		_, _, err := datasetHandler.GetObject(key)
+	for _, object := range objectGroup.GetObjects() {
+		_, _, err := datasetHandler.GetObject(object.GetID())
 		if err != nil {
 			t.Error(err)
 		}

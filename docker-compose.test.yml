@@ -1,10 +1,9 @@
-version: '3'
-
+version: '3.9'
 services:
   sut:
     environment:
       MONGO_INITDB_URL: mongo
-      MINIO_ENDPOINT_URL: http://minio:9000
+      MINIO_ENDPOINT_URL: "http://minio:9000"
       AWS_ACCESS_KEY_ID: minioadmin
       AWS_SECRET_ACCESS_KEY: minioadmin
     build: 
@@ -13,20 +12,15 @@ services:
     command: go test ./...
     depends_on:
       - mongo
-      - minio
       - minioConf
-  mongo:
-    image: mongo
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: test123
   minio:
     image: minio/minio
-    ports:
-      - 9000:9000
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
   minioConf:
     image: minio/mc
     depends_on:
@@ -36,6 +30,11 @@ services:
       /usr/bin/mc config host add myminio http://minio:9000 minioadmin minioadmin;
       /usr/bin/mc rm -r --force myminio/testbucket;
       /usr/bin/mc mb myminio/testbucket;
-      /usr/bin/mc policy download myminio/testbucket;
       exit 0;
       "
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test123

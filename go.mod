@@ -3,7 +3,7 @@ module github.com/ScienceObjectsDB/ScienceObjectsDBServer
 go 1.16
 
 require (
-	github.com/ScienceObjectsDB/go-api v0.0.0-20210310231849-eb07016ca864
+	github.com/ScienceObjectsDB/go-api v0.0.0-20210311202335-991f8f2e7d50
 	github.com/aws/aws-sdk-go v1.37.26 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.2.0
 	github.com/aws/aws-sdk-go-v2/config v1.1.1

@@ -16,6 +16,8 @@ github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/ScienceObjectsDB/go-api v0.0.0-20210310231849-eb07016ca864 h1:cNyQ4c1/dJjtxEbhZtN8W78jE6PIdSizCpUFn48ztg0=
 github.com/ScienceObjectsDB/go-api v0.0.0-20210310231849-eb07016ca864/go.mod h1:6lvWvfTBthBl0kpDfYyrd2aS8jXex1uGD1Lc/2iYAe4=
+github.com/ScienceObjectsDB/go-api v0.0.0-20210311202335-991f8f2e7d50 h1:4tuCDR1UDIovMP2EnnuT9sQMBmCciBRwap9rSAujsG0=
+github.com/ScienceObjectsDB/go-api v0.0.0-20210311202335-991f8f2e7d50/go.mod h1:6lvWvfTBthBl0kpDfYyrd2aS8jXex1uGD1Lc/2iYAe4=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
