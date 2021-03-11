@@ -5,15 +5,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/databasehandler"
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
 )
 
 //DatasetEndpoints Handles dataset related gRPC endpoints
 type DatasetEndpoints struct {
-	DatasetHandler        *databasehandler.DatasetActionHandler
-	DatasetVersionHandler *databasehandler.DatasetVersionActionHandler
 	*GenericEndpoints
 	services.UnimplementedDatasetServiceServer
 }

@@ -67,9 +67,8 @@ func NewS3Handler() (*S3Handler, error) {
 // CreatePresignedUploadLink Creates new upload link
 func (s3handler *S3Handler) CreatePresignedUploadLink(object *models.DatasetObjectEntry) (string, error) {
 	presignedRequestURL, err := s3handler.PresignClient.PresignPutObject(context.Background(), &s3.PutObjectInput{
-		Bucket:        aws.String(object.GetLocation().GetBucket()),
-		Key:           aws.String(object.GetLocation().GetKey()),
-		ContentLength: object.GetContentLen(),
+		Bucket: aws.String(object.GetLocation().GetBucket()),
+		Key:    aws.String(object.GetLocation().GetKey()),
 	})
 
 	if err != nil {

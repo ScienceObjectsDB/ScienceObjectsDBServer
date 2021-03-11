@@ -1,9 +1,12 @@
 package databasehandler
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
@@ -38,6 +41,31 @@ func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
 
 	if entry.DatasetID != datasetRequest.DatasetID {
 		t.Errorf("Inserted dataset id does not match")
+	}
+
+	err = datasetHandler.FinishUpload(entry.GetID())
+	if err != nil {
+		t.Error(err)
+	}
+
+	objectGroup, err := datasetHandler.GetObjectGroup(entry.GetID())
+	if err != nil {
+		t.Error(err)
+	}
+
+	entry.Status = models.Status_Available
+
+	isEqual := proto.Equal(objectGroup, entry)
+	if !isEqual {
+		err := fmt.Errorf("Requrned object are not equal")
+		t.Error(err)
+	}
+
+	for key, _ := range objectGroup.GetObjects() {
+		_, _, err := datasetHandler.GetObject(key)
+		if err != nil {
+			t.Error(err)
+		}
 	}
 
 }

@@ -33,12 +33,21 @@ type ExtractedToken struct {
 
 //ProjectAuthHandler Simple project based authentication handler
 type ProjectAuthHandler struct {
-	OAuth2Handler        *OAuth2Handler
-	DatabaseTokenHandler *databasehandler.TokenActionHandler
-	ProjectHandler       *databasehandler.ProjectActionHandler
+	OAuth2Handler         *OAuth2Handler
+	DatabaseTokenHandler  *databasehandler.TokenActionHandler
+	ProjectHandler        *databasehandler.ProjectActionHandler
+	DatasetHandler        *databasehandler.DatasetActionHandler
+	DatasetVersionHandler *databasehandler.DatasetVersionActionHandler
+	ObjectGroupHandler    *databasehandler.ObjectGroupHandler
 }
 
-func InitProjectHandler(projectHandler *databasehandler.ProjectActionHandler, tokenHandler *databasehandler.TokenActionHandler) (*ProjectAuthHandler, error) {
+func InitProjectHandler(
+	projectHandler *databasehandler.ProjectActionHandler,
+	tokenHandler *databasehandler.TokenActionHandler,
+	datasetHandler *databasehandler.DatasetActionHandler,
+	datasetVersionHandler *databasehandler.DatasetVersionActionHandler,
+	objectGroupHandler *databasehandler.ObjectGroupHandler) (*ProjectAuthHandler, error) {
+
 	oauth2handler, err := InitOauth2()
 	if err != nil {
 		log.Println(err.Error())
@@ -46,9 +55,12 @@ func InitProjectHandler(projectHandler *databasehandler.ProjectActionHandler, to
 	}
 
 	return &ProjectAuthHandler{
-		OAuth2Handler:        oauth2handler,
-		DatabaseTokenHandler: tokenHandler,
-		ProjectHandler:       projectHandler,
+		OAuth2Handler:         oauth2handler,
+		DatabaseTokenHandler:  tokenHandler,
+		ProjectHandler:        projectHandler,
+		DatasetHandler:        datasetHandler,
+		DatasetVersionHandler: datasetVersionHandler,
+		ObjectGroupHandler:    objectGroupHandler,
 	}, nil
 
 }
@@ -82,8 +94,21 @@ func (handler *ProjectAuthHandler) Authorize(
 	switch resource {
 	case models.Resource_Project:
 		projectID = resourceID
+	case models.Resource_Dataset:
+		projectID, err = handler.DatasetHandler.GetDatasetProjectID(resourceID)
+	case models.Resource_DatasetVersion:
+		projectID, err = handler.getDatasetVersionProjectID(resourceID)
+	case models.Resource_DatasetObjectGroupResource:
+		projectID, err = handler.getObjectGroupProjectID(resourceID)
+	case models.Resource_DatasetObject:
+		projectID, err = handler.getObjectProjectID(resourceID)
 	default:
 		err = fmt.Errorf("Can not process resource type: %v", resource)
+		return false, err
+	}
+
+	if err != nil {
+		log.Println(err.Error())
 		return false, err
 	}
 
@@ -140,4 +165,41 @@ func getToken(ctx context.Context) (*ExtractedToken, error) {
 	}
 
 	return &extractedToken, nil
+}
+
+func (handler *ProjectAuthHandler) getDatasetVersionProjectID(id string) (string, error) {
+	datasetID, err := handler.DatasetVersionHandler.GetDatasetVersionDatasetID(id)
+	if err != nil {
+		log.Println(err.Error())
+		return "", nil
+	}
+	return handler.DatasetHandler.GetDatasetProjectID(datasetID)
+}
+
+func (handler *ProjectAuthHandler) getObjectGroupProjectID(id string) (string, error) {
+	objectGroup, err := handler.ObjectGroupHandler.GetObjectGroup(id)
+	if err != nil {
+		log.Println(err.Error())
+		return "", nil
+	}
+	datasetID := objectGroup.GetDatasetID()
+
+	return handler.DatasetHandler.GetDatasetProjectID(datasetID)
+}
+
+func (handler *ProjectAuthHandler) getObjectProjectID(id string) (string, error) {
+	groupID, _, err := handler.ObjectGroupHandler.GetObject(id)
+	if err != nil {
+		log.Println(err.Error())
+		return "", nil
+	}
+
+	objectGroup, err := handler.ObjectGroupHandler.GetObjectGroup(groupID)
+	if err != nil {
+		log.Println(err.Error())
+		return "", nil
+	}
+	datasetID := objectGroup.GetDatasetID()
+
+	return handler.DatasetHandler.GetDatasetProjectID(datasetID)
 }

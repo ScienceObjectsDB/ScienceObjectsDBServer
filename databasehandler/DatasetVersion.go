@@ -97,3 +97,34 @@ func (handler *DatasetVersionActionHandler) ReleaseDatasetVersion(request *servi
 	return &insertedDatasetVersion, nil
 
 }
+
+func (handler *DatasetVersionActionHandler) GetDatasetVersion(id string) (*models.DatasetVersionEntry, error) {
+	result := handler.GetDatasetVersionCollection().FindOne(handler.MongoDefaultContext, bson.M{
+		"ID": id,
+	})
+
+	datasetVersionEntry := models.DatasetVersionEntry{}
+
+	if result.Err() != nil {
+		log.Println(result.Err().Error())
+		return nil, result.Err()
+	}
+
+	err := result.Decode(&datasetVersionEntry)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return &datasetVersionEntry, nil
+}
+
+func (handler *DatasetVersionActionHandler) GetDatasetVersionDatasetID(id string) (string, error) {
+	entry, err := handler.GetDatasetVersion(id)
+	if err != nil {
+		log.Println(err.Error())
+		return "", err
+	}
+
+	return entry.GetDatasetID(), nil
+}

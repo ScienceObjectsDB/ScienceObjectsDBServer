@@ -14,9 +14,12 @@ import (
 )
 
 type GenericEndpoints struct {
-	AuthHandler          authhandler.AuthHandler
-	ObjectStorageHandler *objectstoragehandler.S3Handler
-	ProjectActionHandler *databasehandler.ProjectActionHandler
+	AuthHandler           authhandler.AuthHandler
+	ObjectStorageHandler  *objectstoragehandler.S3Handler
+	ProjectActionHandler  *databasehandler.ProjectActionHandler
+	DatasetHandler        *databasehandler.DatasetActionHandler
+	DatasetVersionHandler *databasehandler.DatasetVersionActionHandler
+	ObjectGroupHandler    *databasehandler.ObjectGroupHandler
 }
 
 type GRPCServerHandler struct {
@@ -55,9 +58,27 @@ func (server *GRPCServerHandler) StartGRPCServerWithListener(listener net.Listen
 	}
 
 	datasetEndpoints, err := NewDatasetEndpoints(genericEndpoints)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	objectEndpoints, err := NewObjectEndpoints(genericEndpoints)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	loadEndpoints, err := NewLoadEndpoints(genericEndpoints)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
 
 	services.RegisterProjectAPIServer(grpcServer, projectEndpoints)
 	services.RegisterDatasetServiceServer(grpcServer, datasetEndpoints)
+	services.RegisterDatasetObjectsServiceServer(grpcServer, objectEndpoints)
+	services.RegisterObjectLoadServer(grpcServer, loadEndpoints)
 
 	return nil
 }
@@ -87,16 +108,37 @@ func (server *GRPCServerHandler) initGenericEndpoints() (*GenericEndpoints, erro
 
 	objectstorageHandler, err := objectstoragehandler.NewS3Handler()
 
-	auth, err := authhandler.InitProjectHandler(&projectHandler, &tokenHandler)
+	datasetHandler, err := databasehandler.NewDatasetHandler(dbHandler)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	datasetVersionHandler, err := databasehandler.NewDatasetVersionHandler(dbHandler)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	objectGroupHandler, err := databasehandler.NewObjectGroupHandler(dbHandler)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	auth, err := authhandler.InitProjectHandler(&projectHandler, &tokenHandler, datasetHandler, datasetVersionHandler, objectGroupHandler)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
 	}
 
 	genericEndpoints := GenericEndpoints{
-		AuthHandler:          auth,
-		ProjectActionHandler: &projectHandler,
-		ObjectStorageHandler: objectstorageHandler,
+		AuthHandler:           auth,
+		ProjectActionHandler:  &projectHandler,
+		ObjectStorageHandler:  objectstorageHandler,
+		DatasetHandler:        datasetHandler,
+		DatasetVersionHandler: datasetVersionHandler,
+		ObjectGroupHandler:    objectGroupHandler,
 	}
 
 	return &genericEndpoints, nil
