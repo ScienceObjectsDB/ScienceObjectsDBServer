@@ -13,6 +13,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+//GenericEndpoints holds all basic handler for database, objectstorage and authentication
+//Is Used in the individual API endpoint structs to only instantiate each handler once
 type GenericEndpoints struct {
 	AuthHandler           authhandler.AuthHandler
 	ObjectStorageHandler  *objectstoragehandler.S3Handler
@@ -22,6 +24,7 @@ type GenericEndpoints struct {
 	ObjectGroupHandler    *databasehandler.ObjectGroupHandler
 }
 
+//GRPCServerHandler handles the grpc server for the API
 type GRPCServerHandler struct {
 }
 
@@ -42,6 +45,7 @@ func (server *GRPCServerHandler) StartGRPCServer(port int64) error {
 	return nil
 }
 
+//StartGRPCServerWithListener starts a GRPC server based on the provided listener
 func (server *GRPCServerHandler) StartGRPCServerWithListener(listener net.Listener) error {
 	grpcServer := grpc.NewServer()
 

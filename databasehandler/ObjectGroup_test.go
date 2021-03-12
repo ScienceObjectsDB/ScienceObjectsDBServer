@@ -20,18 +20,22 @@ func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
 
 	datasetRequest := services.CreateObjectGroupRequest{
 		Name: "foo",
-		Labels: map[string]string{
-			"test1": "foo",
-			"test2": "baa",
+		Labels: []*models.Label{
+			{
+				Key:   "key1",
+				Value: "value1",
+			},
 		},
 		Objects: []*services.CreateObjectRequest{
 			{
 				Filename:   "testfile",
 				Filetype:   "txt",
 				ContentLen: 9,
-				Labels: map[string]string{
-					"test3": "bar",
-					"test4": "baz",
+				Labels: []*models.Label{
+					{
+						Key:   "key1",
+						Value: "value1",
+					},
 				},
 			},
 		},

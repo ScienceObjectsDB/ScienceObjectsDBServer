@@ -15,6 +15,7 @@ type ObjectEndpoints struct {
 	services.UnimplementedDatasetObjectsServiceServer
 }
 
+//NewObjectEndpoints New endpoints for object and object group handling
 func NewObjectEndpoints(genericEndpoints *GenericEndpoints) (*ObjectEndpoints, error) {
 	return &ObjectEndpoints{
 		GenericEndpoints: genericEndpoints,

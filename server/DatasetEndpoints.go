@@ -15,6 +15,7 @@ type DatasetEndpoints struct {
 	services.UnimplementedDatasetServiceServer
 }
 
+//NewDatasetEndpoints implements the dataset service endpoints
 func NewDatasetEndpoints(genericEndpoints *GenericEndpoints) (*DatasetEndpoints, error) {
 
 	return &DatasetEndpoints{
@@ -70,7 +71,7 @@ func (datasetEndpoint *DatasetEndpoints) Dataset(ctx context.Context, id *models
 	return entry, nil
 }
 
-// Lists Versions of a dataset
+//DatasetVersions Lists Versions of a dataset
 func (datasetEndpoint *DatasetEndpoints) DatasetVersions(ctx context.Context, id *models.ID) (*services.DatasetVersionList, error) {
 	authorized, err := datasetEndpoint.AuthHandler.Authorize(ctx, models.Resource_DatasetVersion, models.Right_Read, id.GetID())
 	if err != nil {
@@ -98,7 +99,7 @@ func (datasetEndpoint *DatasetEndpoints) DatasetVersions(ctx context.Context, id
 	return &versionList, nil
 }
 
-// Updates a field of a dataset
+//UpdateDatasetField Updates a field of a dataset
 func (datasetEndpoint *DatasetEndpoints) UpdateDatasetField(_ context.Context, _ *models.UpdateFieldsRequest) (*models.DatasetEntry, error) {
 	panic("not implemented") // TODO: Implement
 }

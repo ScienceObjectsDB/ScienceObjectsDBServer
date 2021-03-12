@@ -49,7 +49,7 @@ type DBUtilsHandler struct {
 	AuthProjectCollectionName   string
 }
 
-// NewDBUtilsHandler Creates a new handler that handles database interaction
+//NewDBUtilsHandler Creates a new handler that handles database interaction
 func NewDBUtilsHandler(client *mongo.Client, ctx context.Context) (*DBUtilsHandler, error) {
 	handler := DBUtilsHandler{
 		MongoClient:                 client,
