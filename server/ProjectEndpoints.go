@@ -42,7 +42,7 @@ func (endpoint *ProjectEndpoints) AddUserToProject(_ context.Context, _ *service
 
 //GetProjectDatasets Returns all datasets that belong to a certain project
 func (endpoint *ProjectEndpoints) GetProjectDatasets(ctx context.Context, id *models.ID) (*services.DatasetList, error) {
-	authorized, err := endpoint.AuthHandler.Authorize(ctx, models.Resource_Dataset, models.Right_Read, id.GetID())
+	authorized, err := endpoint.AuthHandler.Authorize(ctx, models.Resource_Project, models.Right_Read, id.GetID())
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err

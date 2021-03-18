@@ -73,7 +73,7 @@ func (datasetEndpoint *DatasetEndpoints) Dataset(ctx context.Context, id *models
 
 //DatasetVersions Lists Versions of a dataset
 func (datasetEndpoint *DatasetEndpoints) DatasetVersions(ctx context.Context, id *models.ID) (*services.DatasetVersionList, error) {
-	authorized, err := datasetEndpoint.AuthHandler.Authorize(ctx, models.Resource_DatasetVersion, models.Right_Read, id.GetID())
+	authorized, err := datasetEndpoint.AuthHandler.Authorize(ctx, models.Resource_Dataset, models.Right_Read, id.GetID())
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
@@ -131,4 +131,64 @@ func (datasetEndpoint *DatasetEndpoints) ReleaseDatasetVersion(ctx context.Conte
 	}
 
 	return version, nil
+}
+
+func (datasetEndpoint *DatasetEndpoints) DatasetVersionObjectGroups(ctx context.Context, request *models.ID) (*services.ObjectGroupList, error) {
+	authorized, err := datasetEndpoint.AuthHandler.Authorize(ctx, models.Resource_DatasetVersion, models.Right_Write, request.GetID())
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	if !authorized {
+		err := fmt.Errorf("Access denied: Can not authorize %v access to %v %v", models.Right_Write, models.Resource_DatasetVersion, request.GetID())
+		log.Println(err.Error())
+		return nil, err
+
+	}
+
+	version, err := datasetEndpoint.DatasetVersionHandler.GetDatasetVersion(request.ID)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	groups, err := datasetEndpoint.ObjectGroupHandler.GetObjectGroups(version.GetObjectIDs())
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	objectGroupList := services.ObjectGroupList{
+		ObjectGroups: groups,
+	}
+
+	return &objectGroupList, nil
+}
+
+//DatasetObjectGroups Lists all objects of a dataset
+func (datasetEndpoint *DatasetEndpoints) DatasetObjectGroups(ctx context.Context, request *models.ID) (*services.ObjectGroupList, error) {
+	authorized, err := datasetEndpoint.AuthHandler.Authorize(ctx, models.Resource_Dataset, models.Right_Read, request.GetID())
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	if !authorized {
+		err := fmt.Errorf("Access denied: Can not authorize %v access to %v %v", models.Right_Read, models.Resource_Dataset, request.GetID())
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	groups, err := datasetEndpoint.ObjectGroupHandler.GetDatasetObjects(request.GetID())
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	objectGroupList := services.ObjectGroupList{
+		ObjectGroups: groups,
+	}
+
+	return &objectGroupList, nil
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/objectstoragehandler"
 	"github.com/ScienceObjectsDB/go-api/services"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 //GenericEndpoints holds all basic handler for database, objectstorage and authentication
@@ -83,6 +84,15 @@ func (server *GRPCServerHandler) StartGRPCServerWithListener(listener net.Listen
 	services.RegisterDatasetServiceServer(grpcServer, datasetEndpoints)
 	services.RegisterDatasetObjectsServiceServer(grpcServer, objectEndpoints)
 	services.RegisterObjectLoadServer(grpcServer, loadEndpoints)
+
+	reflection.Register(grpcServer)
+
+	log.Println(fmt.Sprintf("Starting grpc server on port: %v", listener.Addr().String()))
+	err = grpcServer.Serve(listener)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
 
 	return nil
 }

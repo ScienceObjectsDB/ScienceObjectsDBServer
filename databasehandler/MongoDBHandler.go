@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
@@ -19,6 +20,8 @@ import (
 
 //NewMongoClient Connects to a mongodb
 func NewMongoClient(ctx context.Context) (*mongo.Client, error) {
+	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
+
 	mongoDBURL := viper.GetString("Config.Database.Mongo.URL")
 	if mongoDBURL == "" {
 		err := errors.New("MongoDB URL required to be present in config")

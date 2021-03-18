@@ -125,6 +125,26 @@ func (handler *ObjectGroupHandler) GetObjectGroup(objectGroupID string) (*models
 	return &datasetObjectGroup, nil
 }
 
+func (handler *ObjectGroupHandler) GetObjectGroups(objectGroupID []string) ([]*models.DatasetObjectGroup, error) {
+	var objectGroups []*models.DatasetObjectGroup
+
+	results, err := handler.DBUtilsHandler.GetDatasetObjectGroupCollection().Find(handler.MongoDefaultContext, bson.M{
+		"ID": bson.M{"$in": objectGroupID},
+	})
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	err = results.All(handler.MongoDefaultContext, objectGroups)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return objectGroups, nil
+}
+
 func (handler *ObjectGroupHandler) GetObject(objectID string) (string, *models.DatasetObjectEntry, error) {
 	option := options.FindOneOptions{
 		Projection: bson.M{"Objects.$": 1, "ID": 1},
@@ -150,4 +170,25 @@ func (handler *ObjectGroupHandler) GetObject(objectID string) (string, *models.D
 	}
 
 	return datasetObject.ID, datasetObject.Objects[0], nil
+}
+
+//GetDatasetObjects Lists all objectgroups of a dataset
+func (handler *ObjectGroupHandler) GetDatasetObjects(datasetID string) ([]*models.DatasetObjectGroup, error) {
+	var objectGroups []*models.DatasetObjectGroup
+
+	results, err := handler.DBUtilsHandler.GetDatasetObjectGroupCollection().Find(handler.MongoDefaultContext, bson.M{
+		"DatasetID": datasetID,
+	})
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	err = results.All(handler.MongoDefaultContext, &objectGroups)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return objectGroups, nil
 }

@@ -19,7 +19,7 @@ type ProjectActionHandler struct {
 	*DBUtilsHandler
 }
 
-// CreateProject Creates a new project
+// CreateProject Creates a new project and returns the inserted entry
 func (handler *ProjectActionHandler) CreateProject(userid string, request *services.CreateProjectRequest) (*models.ProjectEntry, error) {
 	projectUser := models.User{
 		UserID:   userid,
@@ -144,7 +144,7 @@ func (handler *ProjectActionHandler) GetProject(projectID string) (*models.Proje
 // GetProjectDatasets Returns all datasets of a project
 func (handler *ProjectActionHandler) GetProjectDatasets(projectID string) ([]*models.DatasetEntry, error) {
 	csr, err := handler.GetDatasetCollection().Find(handler.MongoDefaultContext, bson.M{
-		"OwnerProjectID": projectID,
+		"ProjectID": projectID,
 	})
 	if err != nil {
 		log.Println(err.Error())
