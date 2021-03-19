@@ -2,9 +2,10 @@ package objectstoragehandler
 
 import (
 	"context"
-	"log"
 	"os"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/aws/aws-sdk-go-v2/aws"

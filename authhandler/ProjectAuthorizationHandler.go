@@ -3,7 +3,8 @@ package authhandler
 import (
 	"context"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/databasehandler"
 	"github.com/ScienceObjectsDB/go-api/models"

@@ -3,7 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"

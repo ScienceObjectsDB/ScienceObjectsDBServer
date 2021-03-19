@@ -2,9 +2,10 @@ package databasehandler
 
 import (
 	"context"
-	"log"
 	"os"
 	"testing"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/util"
 	"github.com/ScienceObjectsDB/go-api/models"

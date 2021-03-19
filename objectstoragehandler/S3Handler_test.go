@@ -3,11 +3,12 @@ package objectstoragehandler
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path"
 	"testing"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 )

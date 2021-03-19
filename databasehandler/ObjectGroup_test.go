@@ -2,8 +2,9 @@ package databasehandler
 
 import (
 	"fmt"
-	"log"
 	"testing"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
