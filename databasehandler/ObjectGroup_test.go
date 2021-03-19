@@ -4,15 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
 	"google.golang.org/protobuf/proto"
 )
 
 func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	datasetHandler, err := NewObjectGroupHandler(dbHandler)
 	if err != nil {
