@@ -1,0 +1,17 @@
+Config:
+  API:
+    Endpointport: 9000
+  Database:
+    Mongo:
+      URL: localhost
+      Username: root
+      AuthSource: admin
+      DatasetDatabaseName: SciObjsDBsDatabase
+      AuthorizationDatabaseName: SciObjsDBsAuthDB
+  S3:
+    Bucketname: BioDataDBTestBucket
+    Endpoint: s3.computational.bio.uni-gessen.de
+    Region: RegionOne
+  OAuth2Auth:
+    UserInfoEndpoint: "locahost"
+  
