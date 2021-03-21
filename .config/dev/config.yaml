@@ -9,7 +9,7 @@ Config:
       DatasetDatabaseName: SciObjsDBsDatabase
       AuthorizationDatabaseName: SciObjsDBsAuthDB
   S3:
-    Bucketname: BioDataDBTestBucket
+    Bucketname: ScienceObjectsDBDev
     Endpoint: s3.computational.bio.uni-gessen.de
     Region: RegionOne
   OAuth2Auth:

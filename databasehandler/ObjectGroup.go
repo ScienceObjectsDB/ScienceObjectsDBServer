@@ -5,6 +5,7 @@ import (
 	"path"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
@@ -22,11 +23,18 @@ type SingleObject struct {
 //ObjectGroupHandler Handles dataset object group actions
 type ObjectGroupHandler struct {
 	*DBUtilsHandler
+	BucketName string
 }
 
 func NewObjectGroupHandler(dbUtilsHandler *DBUtilsHandler) (*ObjectGroupHandler, error) {
+	bucket := viper.GetString("Config.S3.Bucketname")
+	if bucket == "" {
+		log.Fatalln("No valid bucketname found")
+	}
+
 	handler := ObjectGroupHandler{
 		DBUtilsHandler: dbUtilsHandler,
+		BucketName:     bucket,
 	}
 
 	return &handler, nil
@@ -65,7 +73,7 @@ func (handler *ObjectGroupHandler) CreateDatasetObjectGroupObject(request *servi
 			UploadID:           uploadID,
 			Origin:             requestedObject.Origin,
 			Location: &models.Location{
-				Bucket:       "fgoo",
+				Bucket:       handler.BucketName,
 				Key:          objectKey,
 				LocationType: models.LocationType_Object,
 			},
