@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/ScienceObjectsDB/go-api/models"
+	"github.com/spf13/viper"
 )
 
 func TestS3Handler_CreatePresignedLinks(t *testing.T) {
@@ -16,6 +17,8 @@ func TestS3Handler_CreatePresignedLinks(t *testing.T) {
 
 	os.Setenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
 	os.Setenv("AWS_ACCESS_KEY_ID", "minioadmin")
+
+	viper.Set("Config.S3.Bucketname", "testbucket")
 
 	object := models.DatasetObjectEntry{
 		ID:       "test",
