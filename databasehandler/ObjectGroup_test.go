@@ -6,10 +6,13 @@ import (
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/ScienceObjectsDB/go-api/services"
+	"github.com/spf13/viper"
 	"google.golang.org/protobuf/proto"
 )
 
 func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
+
+	viper.Set("Config.S3.Bucketname", "testbucket")
 
 	datasetHandler, err := NewObjectGroupHandler(dbHandler)
 	if err != nil {

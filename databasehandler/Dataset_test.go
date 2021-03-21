@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/util"
 	"github.com/ScienceObjectsDB/go-api/models"
@@ -15,6 +16,9 @@ import (
 var dbHandler *DBUtilsHandler
 
 func TestMain(m *testing.M) {
+
+	viper.Set("Config.S3.Bucketname", "testbucket")
+
 	err := util.InitTestEnv()
 	if err != nil {
 		log.Fatalln(err.Error())
