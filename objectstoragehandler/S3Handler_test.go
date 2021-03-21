@@ -3,7 +3,6 @@ package objectstoragehandler
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path"
@@ -14,7 +13,6 @@ import (
 
 func TestS3Handler_CreatePresignedLinks(t *testing.T) {
 	key := path.Join("foo", "baa")
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	os.Setenv("AWS_SECRET_ACCESS_KEY", "minioadmin")
 	os.Setenv("AWS_ACCESS_KEY_ID", "minioadmin")

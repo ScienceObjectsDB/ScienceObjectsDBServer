@@ -3,8 +3,9 @@ package databasehandler
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"log"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/go-api/models"
 	"github.com/google/uuid"

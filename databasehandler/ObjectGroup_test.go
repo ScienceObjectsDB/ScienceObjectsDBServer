@@ -2,7 +2,6 @@ package databasehandler
 
 import (
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/ScienceObjectsDB/go-api/models"
@@ -11,7 +10,6 @@ import (
 )
 
 func TestObjectGroupHandler_CreateDatasetObjectGroupObject(t *testing.T) {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	datasetHandler, err := NewObjectGroupHandler(dbHandler)
 	if err != nil {

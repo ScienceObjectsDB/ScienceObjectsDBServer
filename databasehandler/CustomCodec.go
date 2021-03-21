@@ -2,8 +2,9 @@ package databasehandler
 
 import (
 	"encoding/json"
-	"log"
 	"reflect"
+
+	log "github.com/sirupsen/logrus"
 
 	structpb "github.com/golang/protobuf/ptypes/struct"
 	"go.mongodb.org/mongo-driver/bson"

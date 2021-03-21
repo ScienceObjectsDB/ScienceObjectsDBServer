@@ -3,8 +3,9 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/authhandler"
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/databasehandler"

@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"reflect"
+
+	log "github.com/sirupsen/logrus"
 
 	structpb "github.com/golang/protobuf/ptypes/struct"
 	"github.com/spf13/viper"

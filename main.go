@@ -1,7 +1,11 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"path"
+	"runtime"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/config"
 	"github.com/ScienceObjectsDB/ScienceObjectsDBServer/server"
@@ -14,7 +18,15 @@ var opts struct {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetFormatter(&log.JSONFormatter{
+		CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+			filename := path.Base(f.File)
+			return fmt.Sprintf("%s()", f.Function), fmt.Sprintf("%s:%d", filename, f.Line)
+		},
+		TimestampFormat: "02-01-2006 15:04:05",
+	},
+	)
+	log.SetReportCaller(true)
 
 	_, err := flags.Parse(&opts)
 	if err != nil {
