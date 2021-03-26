@@ -37,7 +37,7 @@ func (endpoints *ObjectEndpoints) CreateObjectGroup(ctx context.Context, request
 	}
 
 	if !authorized {
-		err := fmt.Errorf("Access denied: Can not authorize %v access to %v %v", models.Right_Write, models.Resource_Project, request.GetDatasetID())
+		err := fmt.Errorf("Access denied: Can not authorize %v access to %v %v", models.Right_Write, models.Resource_Dataset, request.GetDatasetID())
 		log.Println(err.Error())
 		return nil, err
 

@@ -37,8 +37,20 @@ func (endpoint *ProjectEndpoints) CreateProject(ctx context.Context, request *se
 }
 
 //AddUserToProject Adds a new user to a given project
-func (endpoint *ProjectEndpoints) AddUserToProject(_ context.Context, _ *services.AddUserToProjectRequest) (*models.ProjectEntry, error) {
-	panic("not implemented") // TODO: Implement
+func (endpoint *ProjectEndpoints) AddUserToProject(ctx context.Context, request *services.AddUserToProjectRequest) (*models.ProjectEntry, error) {
+	authorized, err := endpoint.AuthHandler.Authorize(ctx, models.Resource_Project, models.Right_Write, request.GetProjectID())
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	if !authorized {
+		err := fmt.Errorf("access on project with ID %v denied", request.GetProjectID())
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	return endpoint.ProjectActionHandler.AddUserToProject(request.GetUserID(), request.GetProjectID(), request.GetScope())
 }
 
 //GetProjectDatasets Returns all datasets that belong to a certain project
